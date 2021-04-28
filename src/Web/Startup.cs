@@ -96,6 +96,9 @@ namespace Microsoft.eShopWeb.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAzureAppConfiguration();
+            services.AddFeatureManagement();
+
             services.AddCookieSettings();
 
 
@@ -113,6 +116,8 @@ namespace Microsoft.eShopWeb.Web
                                        .AddDefaultTokenProviders();
 
             services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
+
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddCoreServices(Configuration);
             services.AddWebServices(Configuration);
@@ -163,9 +168,6 @@ namespace Microsoft.eShopWeb.Web
             services.AddBlazorServices();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddAzureAppConfiguration();
-            services.AddFeatureManagement();
 
             _services = services; // used to debug registered services
         }

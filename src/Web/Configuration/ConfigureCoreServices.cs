@@ -1,4 +1,5 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Interfaces;
+﻿using Microsoft.eShopWeb.ApplicationCore;
+using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Services;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Logging;
@@ -18,7 +19,14 @@ namespace Microsoft.eShopWeb.Web.Configuration
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddSingleton<IUriComposer>(new UriComposer(configuration.Get<CatalogSettings>()));
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
-            services.AddTransient<IEmailSender, EmailSender>();
+
+            if (configuration[$"FeatureManagement:{FeatureFlags.EnableSendgrid}"] == "True")
+            {
+                services.AddTransient<IEmailSender, SendGridEmailSender>();
+            }
+            else {
+                services.AddTransient<IEmailSender, EmailSender>();
+            }
 
             return services;
         }
