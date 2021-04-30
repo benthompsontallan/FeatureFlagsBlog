@@ -100,7 +100,10 @@ namespace Microsoft.eShopWeb.Web
         {
             services.AddAzureAppConfiguration();
             services.AddFeatureManagement()
-                .AddFeatureFilter<IpAddressPercentageFeatureFilter>();
+                .AddFeatureFilter<IpAddressPercentageFeatureFilter>()
+                .AddFeatureFilter<TargetingFilter>();
+
+            services.AddSingleton<ITargetingContextAccessor, UserTargetingContextAccessor>();
 
             services.AddCookieSettings();
 
